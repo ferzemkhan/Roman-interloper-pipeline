@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from roman_config import *
+from Roman_config import *
 
 def build_sample(tracer_name):
     df = pd.read_csv(catalog_path)
