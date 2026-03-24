@@ -9,3 +9,5 @@ The **run_rascalC.py** is used for generating RascalC covariance matrix. Since t
 The **fit_bao.py** is used for BAO fitting.
 
 The **run_pipeline.py** is to run the full pipeline. Since all of the functions can be called independently, you can remove steps in the run_pipeline.py.
+
+The **Test_run.ipynb** is the jupyter notebook for running test.
