@@ -3,10 +3,11 @@ from pycorr import TwoPointCorrelationFunction
 from cosmoprimo.fiducial import DESI
 from RascalC import run_cov
 from RascalC.cov_utils import export_cov_legendre
+from RascalC.post_process.legendre import post_process_legendre
 
 from Roman_config import *
 
-def main():
+def run_rascalc():
     ensure_dirs()
 
     # Load saved pycorr objects from calculate_2pcf.py
@@ -26,6 +27,7 @@ def main():
     print("pycorr_allcounts_11 shape:", pycorr_allcounts_11.shape)
     print("rand shape:", rand.shape)
     print("random_jack shape:", random_jack.shape)
+    print("NTHREADS:", NTHREADS)
 
     cosmo = DESI()
 
@@ -62,6 +64,7 @@ def main():
         skip_s_bins = skip_s_bins,
         seed=rascalC_seed
     )
+    print("Cutting range:", skip_s_bins)
 
     cov = results["full_theory_covariance"]
     print("Covariance shape from run_cov:", cov.shape)
@@ -71,8 +74,23 @@ def main():
 
     export_cov_legendre(str(jackknife_npz), max_l, str(rescaled_cov_txt))
     print("Saved jackknife/rescaled txt:", str(rescaled_cov_txt))
+
+    gaussian_results = post_process_legendre(
+        str(cov_dir),
+        nbin,
+        max_l,
+        str(cov_dir),
+        skip_r_bins=skip_s_bins,
+        print_function=print
+    )
+    print("Gaussian full_theory_covariance shape:", gaussian_results["full_theory_covariance"].shape)
+    print("Saved Gaussian npz:", str(gaussian_npz))
+    
     export_cov_legendre(str(gaussian_npz), max_l, str(gaussian_cov_txt))
     print("Saved Gaussian txt:", str(gaussian_cov_txt))
+
+def main():
+    run_rascalc()
 
 if __name__ == "__main__":
     main()

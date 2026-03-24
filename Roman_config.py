@@ -39,17 +39,23 @@ N4 = 20
 n_loops = 512
 loops_per_sample = 128
 
-# Early RascalC cut: keep 50–200
-skip_s_bins = (10, 0)
+# # Early RascalC cut: keep 50–200
+# skip_s_bins = (10, 0)
 
-# Final exported covariance starts at 60 Mpc/h
-skip_r_bins = 12
-skip_l = 0
+# # Final exported covariance starts at 60 Mpc/h
+# skip_r_bins = 12
+# skip_l = 0
 
 # BAO fit range
 cov_rmin = 60.0
 cov_rmax = 200.0
-cov_dr = 5.0
+cov_dr = (s_edges_max - s_edges_min) / s_edges_nbin
+# cov_dr = 5.0
+
+skip_s_bins = (
+    int((cov_rmin - s_edges_min) / cov_dr),
+    int((s_edges_max - cov_rmax) / cov_dr)
+)
 
 r_step = int(cov_dr)
 rmin_real = int(cov_dr * skip_s_bins[0])
@@ -69,7 +75,8 @@ sigmaper = 6.0
 free_damping = True
 
 nchains = 8
-fitting_method = "profiling"   # or "sampling"
+# fitting_method = "profiling"   # or "sampling"
+fitting_method = "sampling"
 
 # Catalog choices
 catalog_seed = 1234
@@ -96,6 +103,7 @@ random_catalog_path = base_dir / "diffsky_LastJourney_random_catalog_all.csv"
 cov_base = f"Roman_interloper_BAOfit_test-{tracer}_z{zmin}-{zmax}_fixed"
 cov_dir = bao_fit_dir / cov_base
 cov_tmp_dir = cov_dir / "tmp"
+cov_txt_dir = cov_dir / "cov_txt"
 mcmc_dir = bao_fit_dir / "MCMC_chain"
 
 data_name = two_pt_dir / f"data_positions_{tracer}_z{zmin}-{zmax}.npy"
@@ -113,8 +121,8 @@ raw_cov_name = cov_dir / f"Raw_Covariance_Matrices_n{nbin}_l{max_l}.npz"
 gaussian_npz = cov_dir / f"Rescaled_Covariance_Matrices_Legendre_n{nbin}_l{max_l}.npz"
 jackknife_npz = cov_dir / f"Rescaled_Covariance_Matrices_Legendre_Jackknife_n{nbin}_l{max_l}_j{njack}.npz"
 
-gaussian_cov_txt = cov_dir / "cov_txt" / f"xi{xilabel}_{tracer}_{zmin}_{zmax}_lin{r_step}_s{rmin_real}-{int(cov_rmax)}_cov_RascalC_Gaussian.txt"
-rescaled_cov_txt = cov_dir / "cov_txt" / f"xi{xilabel}_{tracer}_{zmin}_{zmax}_lin{r_step}_s{rmin_real}-{int(cov_rmax)}_cov_RascalC_rescaled.txt"
+gaussian_cov_txt = cov_txt_dir / f"xi{xilabel}_{tracer}_{zmin}_{zmax}_lin{r_step}_s{rmin_real}-{int(cov_rmax)}_cov_RascalC_Gaussian.txt"
+rescaled_cov_txt = cov_txt_dir / f"xi{xilabel}_{tracer}_{zmin}_{zmax}_lin{r_step}_s{rmin_real}-{int(cov_rmax)}_cov_RascalC_rescaled.txt"
 
 # BAO filenames
 fn_flags = f"Roman-{tracer}_z{zmin}-{zmax}_{apmode}_s{smin}-{smax}_ds{int(ds)}_ells{''.join(map(str, ells))}"

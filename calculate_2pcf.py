@@ -6,7 +6,7 @@ from build_data_and_random import build_sample, build_randoms
 
 from Roman_config import *
 
-def main():
+def compute_2pcf():
     ensure_dirs()
 
     cosmo = DESI()
@@ -17,6 +17,7 @@ def main():
     print("Data shape:", data.shape)
     print("Random shape:", rand.shape)
     print("Jackknife regions:", njack)
+    print("NTHREADS:", NTHREADS)
 
     subsampler = KMeansSubsampler(
         mode='angular',
@@ -86,6 +87,10 @@ def main():
     print("tmp shape:", tmp.shape)
     print("xi_table_11 shape:", xi_table_11.shape)
     print("test shape:", test.shape)
+
+
+def main():
+    compute_2pcf()
 
 if __name__ == "__main__":
     main()
