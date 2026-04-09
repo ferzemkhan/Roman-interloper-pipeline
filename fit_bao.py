@@ -59,10 +59,11 @@ def get_desilike_stats(xi_poles, xi_cov, fitting_method):
         for param in likelihood.all_params.select(basename='sigma*'):
             param.update(fixed=False)
     else:
-        likelihood.all_params['sigmas'].update(fixed=False, prior={'dist': 'norm', 'loc': sigmas, 'scale': 2., 'limits': [0., 20]})
-        likelihood.all_params['sigmapar'].update(fixed=False, prior={'dist': 'norm', 'loc': sigmapar, 'scale': 2., 'limits': [0., 20]})
-        likelihood.all_params['sigmaper'].update(fixed=False, prior={'dist': 'norm', 'loc': sigmaper, 'scale': 1., 'limits': [0., 20]})
+        likelihood.all_params['sigmas'].update(value=sigmas, fixed=True)
+        likelihood.all_params['sigmapar'].update(value=sigmapar, fixed=True)
+        likelihood.all_params['sigmaper'].update(value=sigmaper, fixed=True)
 
+    print(likelihood.varied_params.names())
     return theory, observable, likelihood
 
 def profile(observable, likelihood):

@@ -34,6 +34,8 @@ max_l = 4
 N2 = 5
 N3 = 10
 N4 = 20
+# N3 = 20 # trying larger N3/N4 to get better convergence 8/26/24
+# N4 = 40 # 
 
 # IMPORTANT: needs multiple samples
 n_loops = 512
@@ -72,7 +74,8 @@ broadband = "power"
 sigmas = 3.0
 sigmapar = 10.0
 sigmaper = 6.0
-free_damping = True
+# free_damping = True
+free_damping = False
 
 nchains = 8
 # fitting_method = "profiling"   # or "sampling"
@@ -84,10 +87,11 @@ jack_seed = 1234
 rascalC_seed = 1234
 random_factor = 6
 
-zcat_min, zcat_max = 0.0, 1.9
+zcat_min, zcat_max = 0.0, 3.0
 
 L_Ha = 6549.
 L_S3 = 9531.
+# L_S3 = 5008
 L_ratio = L_S3 / L_Ha
 
 # =========================
@@ -100,11 +104,11 @@ two_pt_dir = base_dir / "2PT_result"
 catalog_path = base_dir / "sfr_l2_catalog_all_redshiftspace.csv"
 random_catalog_path = base_dir / "diffsky_LastJourney_random_catalog_all.csv"
 
-cov_base = f"Roman_interloper_BAOfit_test-{tracer}_z{zmin}-{zmax}_fixed"
+cov_base = f"Roman_interloper_nofreedamping_BAOfit_test-{tracer}_z{zmin}-{zmax}_fixed"
 cov_dir = bao_fit_dir / cov_base
 cov_tmp_dir = cov_dir / "tmp"
 cov_txt_dir = cov_dir / "cov_txt"
-mcmc_dir = bao_fit_dir / "MCMC_chain"
+mcmc_dir = bao_fit_dir / "MCMC_chain_nofreedamping"
 
 data_name = two_pt_dir / f"data_positions_{tracer}_z{zmin}-{zmax}.npy"
 rand_name = two_pt_dir / f"random_positions_{tracer}_z{zmin}-{zmax}.npy"
