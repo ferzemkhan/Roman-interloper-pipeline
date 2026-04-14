@@ -4,6 +4,8 @@ from cosmoprimo.fiducial import DESI
 from RascalC import run_cov
 from RascalC.cov_utils import export_cov_legendre
 from RascalC.post_process.legendre import post_process_legendre
+from RascalC.post_process.legendre_mix_jackknife import post_process_legendre_mix_jackknife
+from RascalC.convergence_check_extra import convergence_check_extra
 
 from Roman_config import *
 
@@ -73,8 +75,22 @@ def run_rascalc():
     print("RascalC output directory:", cov_dir)
     print("RascalC tmp directory:", cov_tmp_dir)
 
+    xi_jack_name = os.path.join(cov_dir, "xi_jack", f"xi_jack_n{nbin}_m*_j{njack}_11.dat")
+    jack_results = post_process_legendre_mix_jackknife(
+        str(xi_jack_name),
+        str(cov_dir / "weights"),
+        str(cov_dir),
+        mbin,
+        max_l,
+        str(cov_dir),
+        skip_r_bins=skip_s_bins,
+        skip_l=0,
+        print_function=True
+    )
+
     export_cov_legendre(str(jackknife_npz), max_l, str(rescaled_cov_txt))
     print("Saved jackknife/rescaled txt:", str(rescaled_cov_txt))
+    convergence_check_extra(jack_results, print_function = True)
 
     gaussian_results = post_process_legendre(
         str(cov_dir),
@@ -89,6 +105,7 @@ def run_rascalc():
     
     export_cov_legendre(str(gaussian_npz), max_l, str(gaussian_cov_txt))
     print("Saved Gaussian txt:", str(gaussian_cov_txt))
+    convergence_check_extra(gaussian_results, print_function = True)
 
 def main():
     run_rascalc()

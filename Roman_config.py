@@ -29,6 +29,7 @@ skip_nbin_pre = 0
 # Jackknife / RascalC
 jackknife = True
 njack = 60
+if jackknife: mbin = 100
 NTHREADS = 128
 
 mode = "legendre_projected"
